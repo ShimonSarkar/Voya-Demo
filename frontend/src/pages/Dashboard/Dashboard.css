@@ -1,0 +1,82 @@
+.dashboard {
+	font-family: "Parkinsans", sans-serif;
+	padding: 20px;
+	background-color: #f9f9f9;
+	color: #333;
+}
+
+.dashboard h2 {
+	font-weight: 600;
+}
+
+.dashboard-title {
+	font-size: 2rem;
+	color: #ff9505;
+	margin-bottom: 20px;
+	margin-top: 70px;
+	font-weight: 600;
+}
+
+.charts-section {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.charts-row {
+	display: flex;
+	gap: 20px;
+	justify-content: space-between;
+}
+
+.chart-card {
+	flex: 1;
+	background: white;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+.chart-card h3 {
+	color: #ff9505;
+	margin-bottom: 10px;
+	font-weight: 500;
+	margin-top: 0;
+}
+
+.reimbursements-section,
+.upcoming-trips-section {
+	margin-top: 40px;
+}
+
+.reimbursements-section h3,
+.upcoming-trips-section h3 {
+	font-weight: 600;
+	margin-top: 0;
+}
+
+.reimbursements,
+.upcoming-trips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.reimbursement,
+.trip {
+	flex: 1;
+	min-width: 300px;
+	background: white;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reimbursement.approved {
+	border-left: 4px solid #4caf50;
+}
+
+.reimbursement.pending {
+	border-left: 4px solid #ff9505;
+}

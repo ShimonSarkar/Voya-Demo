@@ -1,0 +1,153 @@
+CREATE DATABASE voya_db;
+USE voya_db;
+
+CREATE TABLE Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    google_id VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    jwt TEXT NOT NULL,
+    access_token TEXT,
+    refresh_token TEXT,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Trips (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Expenses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    category ENUM('flight', 'hotel', 'meal', 'transport') NOT NULL,
+    description TEXT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Flights (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    origin VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
+    departure_time DATETIME NOT NULL,
+    arrival_time DATETIME NOT NULL,
+    cost DECIMAL(10, 2) NOT NULL,
+    airline VARCHAR(255) NOT NULL,
+    flight_number VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Flights_Taken (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    flight_id INT NOT NULL,
+    status ENUM('scheduled', 'delayed', 'canceled', 'completed') DEFAULT 'scheduled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE,
+    FOREIGN KEY (flight_id) REFERENCES Flights(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Hotels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    cost_per_night DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Hotels_Booked (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    hotel_id INT NOT NULL,
+    check_in_date DATE NOT NULL,
+    check_out_date DATE NOT NULL,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    status ENUM('booked', 'canceled', 'completed') DEFAULT 'booked',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE,
+    FOREIGN KEY (hotel_id) REFERENCES Hotels(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Restaurants (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    cost_per_person DECIMAL(10, 2) NOT NULL,
+    cuisine VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Restaurants_Reserved (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    restaurant_id INT NOT NULL,
+    reservation_time DATETIME NOT NULL,
+    total_cost DECIMAL(10, 2),
+    status ENUM('reserved', 'canceled', 'completed') DEFAULT 'reserved',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE,
+    FOREIGN KEY (restaurant_id) REFERENCES Restaurants(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Rides (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    origin VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
+    estimated_cost DECIMAL(10, 2) NOT NULL, -- Base cost of the ride
+    provider VARCHAR(255) NOT NULL, -- Ride provider, e.g., Uber, Lyft
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Rides_Reserved (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    ride_id INT NOT NULL,
+    reservation_time DATETIME NOT NULL, -- Time when the ride is reserved
+    total_cost DECIMAL(10, 2), -- Final cost of the ride
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE,
+    FOREIGN KEY (ride_id) REFERENCES Rides(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    google_event_id VARCHAR(255) NOT NULL,
+    entity_id INT NOT NULL,
+    entity_type ENUM('flight', 'reservation') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES Trips(id) ON DELETE CASCADE
+);
+
+
+
+
+

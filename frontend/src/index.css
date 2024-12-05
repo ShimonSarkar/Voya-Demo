@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap');
+
+:root {
+	--blue-1: #0D1B2A;
+	--blue-2: #1B263B;
+	--blue-3: #415A77;
+	--blue-4: #778DA9;
+
+	--gray-1: #E0E1DD;
+
+	--orange-1: #ff9505;
+
+	--font-family: "Parkinsans", sans-serif;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-family: var(--font-family);
+	font-weight: 500;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
